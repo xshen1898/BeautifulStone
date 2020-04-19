@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr><th>日期</th><th>手机号</th><th>抽奖结果</th></tr>
+                </thead>
+                <tbody>
+                    {% for lottery in lottery_list %}
+                        <tr><td>{{ lottery.date | date:"Y-m-d H:i:s" }}</td><td>{{ lottery.cellphone_num }}</td><td>{{ lottery.award }}</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

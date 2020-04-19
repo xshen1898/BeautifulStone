@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../favicon.ico">
+    <title>{% block title %} BeautifulStone {% endblock %}</title>
+    <!-- Load Oneg CSS stylesheet -->
+    <link type="text/css" rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" />
+    <!-- Load site's stylesheet -->
+    <style>
+        body {
+            font-family: "microsoft yahei", "Lucida Grande";
+            font-style: normal;
+            font-weight: 400;
+            font-size: 14px;
+            padding-top: 60px;
+        }
+    </style>
+    {% block specificcss %}
+    {% endblock %}
+</head>
+<body class="components hasnavbar"
+      data-spy="scroll"
+      data-target=".dynamic-nav"
+      data-offset="100">
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-default navbar-fixed-top">
+        <div class="container">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-docs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand site-name" href="/">翡翠原石</a>
+            </div>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div id="bs-docs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li><a href="/">抽奖</a></li>
+                    <li><a href="/">产品介绍</a></li>
+                    <li><a href="/">产品类型</a></li>
+                    <li><a href="/">抽奖说明</a></li>
+                    <li><a href="/">中奖说明</a></li>
+                    <li><a href="/">联系方式</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><p class="navbar-text"></p></li>
+                </ul>
+            </div><!-- /.navbar-collapse -->
+        </div><!-- /.container-fluid -->
+    </nav>
+ 
+    {% block content %}
+    {% endblock %}
+    <!-- Footer -->
+    <footer class="footer">
+    </footer>
+    <!-- Include Javascript libraries at the end of the html body. -->
+    <script src="{% static 'js/jquery-1.12.4.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'js/jQueryRotateCompressed.js' %}"></script>
+    {% block specificjs %}
+    {% endblock %}
+</body>
+</html>
+

@@ -1,0 +1,273 @@
+{% extends 'base.html' %}
+{% block specificcss %}
+<style type="text/css">
+.turntable {
+    width: 500px;
+    height: 500px;
+    margin: 50px auto;
+    overflow: hidden;
+    position: relative;
+}
+.circle {
+    width: 500px;
+    height: 500px;
+}
+.circle svg {
+    width: 500px;
+    height: 500px;
+    transition: all 3s ease;
+}
+.pointer {
+    width: 100px;
+    height: 100px;
+    position: absolute;
+    top: 200px;
+    left: 200px;
+    cursor: pointer;
+    -moz-transform: rotate(-45deg);
+    -webkit-transform: rotate(-45deg);
+    -ms-transform: rotate(-45deg);
+    transform: rotate(-45deg);
+}
+.pointer svg {
+    width: 100px;
+    height: 100px;
+}
+.cellphone {
+    margin-top: 80px;
+}
+.alertwrapper {
+    position: absolute;
+    width: 100%;
+    display: none;
+}        
+</style>
+{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="alertwrapper">
+                <div class="alert alert-info alert-dismissible" role="alert" id="alert">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-9">
+            <div class="turntable">
+                <div class="circle">
+                    <svg width="500" height="500">
+                        <!--包含下面圆弧的圆作为边框-->
+                        <circle cx="250" cy="250" r="200" stroke="#EB826B" fill="transparent" stroke-width="50" />
+                        <!--60度圆弧拼成一个圆盘 -->
+                        <!--正上方1/6圆弧，以下都是顺时针的1/6圆弧 -->
+                        <path d="M 150 76.8 A 200 200, 0, 0, 1, 350 76.8 L 250 250 Z" fill="#FEE9A7" stroke="#FFBE46" stroke-width="1" />
+                        <!--抽奖正上方1/6圆弧内文字-->
+                        <text x="220" y="116.8" transform="rotate(0)" fill="#BD6D26">继续加油</text>
+                        <!--2/6圆弧-->
+                        <path d="M 350 76.8 A 200 200, 0, 0, 1, 450 250 L 250 250 Z" fill="#FEF1CB" stroke="#FFBE46" stroke-width="1" />
+                        <!--抽奖正上方2/6圆弧内文字-->
+                        <text x="320" y="-236.8" transform="rotate(60)" fill="#BD6D26">三等奖</text>
+                        <!--3/6圆弧-->
+                        <path d="M 450 250 A 200 200, 0, 0, 1, 350 423.3 L 250 250 Z" fill="#FEE9A7" stroke="#FFBE46" stroke-width="1" />
+                        <!--抽奖正上方3/6圆弧内文字-->
+                        <text x="70" y="-476.8" transform="rotate(120)" fill="#BD6D26">参与奖</text>
+                        <!--4/6圆弧-->
+                        <path d="M 350 423.3 A 200 200, 0, 0, 1, 150 423.3 L 250 250 Z" fill="#FEF1CB" stroke="#FFBE46" stroke-width="1" />
+                        <!--抽奖正上方4/6圆弧内文字-->
+                        <text x="-280" y="-400" transform="rotate(180)" fill="#BD6D26">一等奖</text>
+                        <!--5/6圆弧-->
+                        <path d="M 50 250 A 200 200, 0, 0, 0, 150 423.3 L 250 250 Z" fill="#FEE9A7" stroke="#FFBE46" stroke-width="1" />
+                        <!--抽奖正上方5/6圆弧内文字-->
+                        <text x="-370" y="-50" transform="rotate(240)" fill="#BD6D26">谢谢您</text>
+                        <!--6/6圆弧-->
+                        <path d="M 50 250 A 200 200, 0, 0, 1, 150 76.8 L 250 250 Z" fill="#FEF1CB" stroke="#FFBE46" stroke-width="1" />
+                        <!--抽奖正上方6/6圆弧内文字-->
+                        <text x="-110" y="200" transform="rotate(300)" fill="#BD6D26">二等奖</text>
+                        </svg>
+                </div>
+                <div class="pointer">
+                    <svg width="100" height="100">
+                    <!--指针-->
+                    <path d="M 50 0 A 50 50, 0, 1, 0, 100 50 L 100 0 Z" fill="#E62D2D"/>
+                    <!--抽奖指针文字-->
+                    <text x="40" y="10" transform="rotate(45)" fill="#FFF">开始抽奖</text>
+                    </svg>
+                </div>
+            </div>   
+        </div>
+        <div class="col-md-3">
+            <div class="cellphone">
+                <form id="lottery_form">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="cellphone">手机号:</label>
+                        <input type="number" class="form-control" id="cellphone" name="cellphone_num">
+                        <span class="help-block">请先输入手机号，然后点击开始抽奖。</span>
+                    </div>
+                  </form>
+            </div>
+        </div>
+    </div>    
+</div>
+{% endblock %}
+{% block specificjs %}
+<script type="text/javascript">
+    var running = false;
+    function startLottery() {
+        running = true; // 标志为 在执行
+        var data = [1, 2, 3, 4, 5, 6];//抽奖
+        //data为随机出来的结果，根据概率后的结果
+        var random_num = data[Math.floor(Math.random() * data.length)];//1~6的随机数
+        switch(random_num) {
+            case 1:
+                rotateTurntable(0, '继续加油');
+                break;
+            case 2:
+                rotateTurntable(60, '二等奖');
+                break;
+            case 3:
+                rotateTurntable(120, '谢谢您');
+                break;
+            case 4:
+                rotateTurntable(180, '一等奖');
+                break;
+            case 5:
+                rotateTurntable(240, '参与奖');
+                break;
+            case 6:
+                rotateTurntable(300, '三等奖');
+                break;
+        }
+    };
+    function rotateTurntable(angle, award) {
+        running = true; // 标志为 在执行
+        $('.circle').stopRotate();
+        $('.circle').rotate({
+            angle: 0,//旋转的角度数
+            duration: 4000, //旋转时间
+            animateTo: angle + 1440, //给定的角度,让它根据得出来的结果加上1440度旋转
+            callback: function() {
+                running = false; // 标志为 执行完毕
+                if (award == '继续加油') {
+                    $('#alert').removeClass();
+                    $('#alert').addClass('alert alert-info alert-dismissible');
+                    $('#alert').html('恭喜您，抽中继续加油。请再来一次。');
+                    $('.alertwrapper').show();
+                    setTimeout("$('.alertwrapper').hide();", 3000);
+                } else {
+                    postLottery(award);
+                }
+            }
+        });
+    };
+    function checkLotteryResult(cellphone_num) {
+        $.ajax({
+            type: 'GET',
+            url: '/lottery_list',
+            dataType: 'json',
+            success: function(result) {
+                var in_result = false;
+                var lottery_result; 
+                $.each(result.data, function (n, value) {
+                    if (value.fields.cellphone_num == cellphone_num) {
+                        in_result = true;
+                        lottery_result = value.fields;
+                        return false;
+                    }
+                });
+                if (in_result) { 
+                    let lottery_date = new Date(lottery_result.date)   
+                    $('#alert').removeClass();
+                    $('#alert').addClass('alert alert-warning alert-dismissible');
+                    $('#alert').html('手机号:' + lottery_result.cellphone_num + ' 已抽奖. 抽奖日期:' + dateFormat("YYYY-mm-dd HH:MM", lottery_date) + ' 抽奖结果:' + lottery_result.award);
+                    $('.alertwrapper').show();
+                    $('#cellphone').val('');
+                    setTimeout("$('.alertwrapper').hide();", 8000);
+                } else {
+                    startLottery();
+                }
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                $('#alert').removeClass();
+                $('#alert').addClass('alert alert-danger alert-dismissible');
+                $('#alert').html('网络错误，本次抽奖失败。请刷新页面后重试。');
+                $('.alertwrapper').show();
+                setTimeout("$('.alertwrapper').hide();", 3000);
+            }
+        });
+    };
+    function postLottery(award) {
+        let fd = new FormData($('#lottery_form')[0]);
+        fd.append('award', award);
+        $.ajax({
+            type : 'post',
+            url : '/save_lottery',
+            data : fd,
+            cache : false,
+            processData : false, 
+            contentType : false,
+            success : function(){
+                let cellphone_num = $('#cellphone').val();
+                $('#cellphone').val('');
+                $('#alert').removeClass();
+                if (award == '谢谢您') {
+                    $('#alert').addClass('alert alert-warning alert-dismissible');
+                    $('#alert').html('很遗憾, 手机号:' + cellphone_num + ' 抽中' + award);
+                    $('.alertwrapper').show();
+                    setTimeout("$('.alertwrapper').hide();", 8000);
+                } else {
+                    $('#alert').addClass('alert alert-success alert-dismissible');
+                    $('#alert').html('恭喜您, 手机号:' + cellphone_num + ' 抽中' + award);
+                    $('.alertwrapper').show();
+                    setTimeout("$('.alertwrapper').hide();", 8000);
+                }
+            },
+            error : function(){
+                $('#alert').removeClass();
+                $('#alert').addClass('alert alert-danger alert-dismissible');
+                $('#alert').html('网络错误，本次抽奖失败。请刷新页面后重试。');
+                $('.alertwrapper').show();
+                setTimeout("$('.alertwrapper').hide();", 3000);
+            }
+        })
+    };
+    function isPhoneNumber(cellphone_num) {
+        var reg =/^0?1[3|4|5|6|7|8][0-9]\d{8}$/;
+        return reg.test(cellphone_num);
+    };
+    function dateFormat(fmt, date) {
+        let ret;
+        const opt = {
+            "Y+": date.getFullYear().toString(),        // 年
+            "m+": (date.getMonth() + 1).toString(),     // 月
+            "d+": date.getDate().toString(),            // 日
+            "H+": date.getHours().toString(),           // 时
+            "M+": date.getMinutes().toString(),         // 分
+            "S+": date.getSeconds().toString()          // 秒
+            // 有其他格式化字符需求可以继续添加，必须转化成字符串
+        };
+        for (let k in opt) {
+            ret = new RegExp("(" + k + ")").exec(fmt);
+            if (ret) {
+                fmt = fmt.replace(ret[1], (ret[1].length == 1) ? (opt[k]) : (opt[k].padStart(ret[1].length, "0")))
+            };
+        };
+        return fmt;
+    };
+    $(".pointer").click(function() {
+        if (running) return; // 如果在执行就退出
+        var cellphone_num = $('#cellphone').val();
+        if (isPhoneNumber(cellphone_num)) {
+            checkLotteryResult(cellphone_num);
+        } else {
+            $('#alert').removeClass();
+            $('#alert').addClass('alert alert-danger alert-dismissible');
+            $('#alert').html('请输入正确的手机号');
+            $('.alertwrapper').show();
+            setTimeout("$('.alertwrapper').hide();", 3000);
+        }
+    });   
+</script>
+{% endblock %}
